@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>I WISH + Past Simple – Clase de inglés</title>
+<style>
+:root{--a:#ff3d71;--b:#3366ff;--c:#00b894;--d:#ff9f1a;--e:#8a3ffc;--ink:#1c1c3a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:70px}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:20px;line-height:1.55}
+main{max-width:900px;margin:0 auto;padding:0 16px 50px}
+#bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:#fff;padding:10px 16px;border-bottom:3px solid #eee}
+#bar div{max-width:900px;margin:0 auto}
+#track{height:16px;background:#eee;border-radius:99px;overflow:hidden}
+#fill{height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--d),var(--c),var(--b));transition:width .4s}
+#pt{font-size:.8em;font-weight:700;margin-top:4px}
+.hero{text-align:center;padding:36px 10px 10px}
+.hero h1{font-size:clamp(2.2rem,8vw,4rem);line-height:1.1;margin:0;font-weight:900}
+.hero h1 span:nth-child(1){color:var(--a)}.hero h1 span:nth-child(2){color:var(--b)}.hero h1 span:nth-child(3){color:var(--c)}
+.hero p{font-size:1.15em}
+.card{border:4px solid var(--k);border-radius:26px;padding:22px;margin:26px 0;box-shadow:8px 8px 0 var(--k);background:#fff}
+.card h2{margin:0 0 12px;font-size:1.6em;color:var(--k);line-height:1.2}
+h3{color:var(--k);margin:22px 0 6px}
+.box{background:color-mix(in srgb,var(--k) 12%,#fff);border-radius:18px;padding:14px 18px;margin:12px 0}
+.big{font-size:1.35em;font-weight:800}
+.sp{background:var(--k,var(--b));color:#fff;border:0;border-radius:99px;padding:8px 16px;font-size:.85em;font-weight:700;cursor:pointer;margin:2px 6px 2px 0;transition:transform .15s}
+.sp:hover{transform:scale(1.07)}.sp:active{transform:scale(.95)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.vc{border:3px solid var(--k);border-radius:18px;padding:12px}
+.vc small{display:block;color:#555}
+ol{padding-left:26px}li{margin:16px 0}
+input[type=text],input:not([type]),textarea{font:inherit;border:3px solid #cfd4ff;border-radius:12px;padding:8px 12px;background:#fff;color:var(--ink);max-width:100%}
+input:not([type]){min-width:140px;width:170px}
+input.w{display:block;width:100%;margin-top:6px}
+textarea{display:block;width:100%;margin-top:8px;resize:vertical}
+input:focus,textarea:focus{outline:none;border-color:var(--k)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:6px}
+.opts label{cursor:pointer;background:#f4f5ff;border-radius:12px;padding:4px 12px}
+input[type=radio],input[type=checkbox]{width:20px;height:20px;accent-color:var(--k);vertical-align:middle}
+details{margin:12px 0;background:#f7f7fb;border-radius:14px;padding:10px 16px}
+summary{cursor:pointer;font-weight:800}
+.done{display:block;margin-top:22px;padding:12px 16px;border-radius:16px;background:var(--k);color:#fff;font-weight:800;cursor:pointer}
+.done input{accent-color:#fff;margin-right:8px}
+.tarea{border-top:6px dashed var(--e);margin-top:50px;padding-top:10px}
+@media(max-width:520px){body{font-size:18px}.card{padding:16px;box-shadow:5px 5px 0 var(--k)}}
+</style></head>
+<body>
+<div id="bar"><div><div id="track"><div id="fill"></div></div><div id="pt">Tu progreso: 0%</div></div></div>
+<main id="app"></main>
+<script>
+const A=[];let n=0;
+const one=t=>[[t.replace(/\(.*?\)/g,'').replace(/___/g,'blank'),1]];
+const btn=(l,t='')=>`<button type="button" class="sp" data-i="${A.push(l)-1}">🔊 ${t}</button>`;
+const fill=a=>`<ol>`+a.map(t=>`<li>${btn(one(t))} ${t.replace('___','<input type="text" autocomplete="off" aria-label="respuesta">')}</li>`).join('')+`</ol>`;
+const pick=a=>`<ol>`+a.map(([q,o])=>{n++;return `<li>${btn(one(q))} ${q.replace('___','<b>______</b>')}<div class="opts">`+o.map(x=>`<label><input type="radio" name="r${n}"> ${x}</label>`).join('')+`</div></li>`}).join('')+`</ol>`;
+const tf=a=>`<ol>`+a.map(t=>{n++;return `<li>${t}<div class="opts"><label><input type="radio" name="r${n}"> Verdadero</label><label><input type="radio" name="r${n}"> Falso</label></div></li>`}).join('')+`</ol>`;
+const qs=a=>`<ol>`+a.map(q=>`<li>${q}<input type="text" class="w" autocomplete="off" placeholder="Tu respuesta…"></li>`).join('')+`</ol>`;
+const wr=(a,r=2)=>`<ol>`+a.map(t=>`<li>${btn(one(t))} ${t}<textarea rows="${r}" placeholder="Escribe aquí…"></textarea></li>`).join('')+`</ol>`;
+const dic=a=>`<ol>`+a.map(t=>`<li>${btn(one(t),'Escuchar')}<input type="text" class="w" autocomplete="off" placeholder="Escribe lo que escuchas…"></li>`).join('')+`</ol>`;
+const dlg=L=>{const names=[...new Set(L.map(x=>x[0]))];
+ return btn(L.map(([s,t])=>[t,names.indexOf(s)?0.8:1.25]),'Escuchar todo el audio')+
+ `<details><summary>📄 Ver transcripción (en inglés)</summary>`+L.map(([s,t])=>`<p><b>${s}:</b> ${t}</p>`).join('')+`</details>`};
+const sec=(k,e,t,b,x='')=>`<section class="card" style="--k:${k}" ${x}><h2>${e} ${t}</h2>${b}<label class="done"><input type="checkbox"> ¡Terminé esta parte!</label></section>`;
+const vc=a=>`<div class="grid">`+a.map(([e,s])=>`<div class="vc">${btn(one(e))}<div class="big">${e}</div><small>${s}</small></div>`).join('')+`</div>`;
+
+const talk=[["Anna","Hey Mike, you look tired today."],["Mike","Yeah. I wish I didn't have to work on Saturdays."],["Anna","Me too. I wish we had more free time."],["Mike","I wish I lived near the beach. I would go surfing every morning."],["Anna","Really? I wish I could surf! I wish I were braver."],["Mike","Don't worry. I wish I knew how to cook. I can only make toast!"],["Anna","Ha! Let's take a cooking class together."]];
+const rd1="Sofia is 28 years old and lives in a small apartment in Chicago. She loves her job, but she is always busy. She wishes she had more time for her family. She also wishes her apartment were bigger, because she wants a dog. Her brother lives in Texas, and she wishes he lived closer. On weekends, Sofia dreams about a quiet house near the mountains.";
+const tom=[["Tom","Hi, I'm Tom. I wish I had a dog, but my apartment is very small. I wish it were bigger."],["Tom","I also wish I didn't work so late every night. And I wish I could play the guitar. It looks so fun!"]];
+const rd2="Laura lives in Boston. She is a nurse and she works at night. She wishes she worked during the day, because she misses her friends. She also wishes Boston weren't so cold in winter. Her sister lives in Mexico, and Laura wishes she visited her more often. Most of all, she wishes she had more free time to paint.";
+
+let h=`<div class="hero"><h1><span>I WISH</span> + <span>PAST</span> <span>SIMPLE</span> ✨</h1><p>¡Bienvenido/a! Hoy aprenderás a decir <b>lo que desearías que fuera diferente</b> en inglés. Haz clic en los botones 🔊 para escuchar en inglés americano. ¡Vamos!</p></div>`;
+
+h+=sec("#ff3d71","🎯","Paso 1: ¿Qué vamos a aprender?",
+`<p>En español decimos <b>"Ojalá tuviera más tiempo"</b> o <b>"Ojalá fuera más alto"</b>. En inglés usamos <b>I wish</b>.</p>
+<div class="box"><p class="big">${btn(one("I wish I had more time."))}I wish I had more time.</p><p>👉 Ojalá tuviera más tiempo. (Pero en realidad NO tengo tiempo.)</p></div>
+<p>Lo usamos para hablar de cosas del <b>presente</b> que <b>no son reales</b> y nos gustaría que fueran diferentes.</p>`);
+
+h+=sec("#3366ff","🧩","Paso 2: La fórmula",
+`<div class="box"><p class="big">I wish + sujeto + verbo en <u>pasado simple</u></p></div>
+<p>⚠️ <b>Importante:</b> aunque el verbo esté en pasado, estamos hablando del <b>presente</b>. El pasado aquí indica que el deseo no es real.</p>
+<h3>✅ Afirmativo</h3>
+<p>${btn(one("I wish I had a car."))}<b>I wish I had a car.</b> → Ojalá tuviera un auto.</p>
+<p>${btn(one("She wishes she lived in Paris."))}<b>She wishes she lived in Paris.</b> → Ojalá ella viviera en París.</p>
+<h3>❌ Negativo</h3>
+<p>Usamos <b>didn't + verbo base</b>:</p>
+<p>${btn(one("I wish I didn't have homework."))}<b>I wish I didn't have homework.</b> → Ojalá no tuviera tarea.</p>
+<h3>⭐ Con el verbo BE: siempre "were"</h3>
+<p>Con <b>I, he, she, it, you, we, they</b> usamos <b>were</b> (¡no "was"!). Negativo: <b>weren't</b>.</p>
+<p>${btn(one("I wish I were taller."))}<b>I wish I were taller.</b> → Ojalá fuera más alto/a.</p>
+<p>${btn(one("I wish it weren't so cold."))}<b>I wish it weren't so cold.</b> → Ojalá no hiciera tanto frío.</p>
+<h3>💡 Truco</h3>
+<div class="box">Con <b>can</b> usamos <b>could</b>: ${btn(one("I wish I could fly."))}<b>I wish I could fly.</b> → Ojalá pudiera volar.</div>
+<h3>🇪🇸 Comparación</h3>
+<p>Realidad: <i>I don't have a dog.</i> (No tengo perro.)<br>Deseo: <b>I wish I had a dog.</b> (Ojalá tuviera un perro.)</p>`);
+
+h+=sec("#00b894","🗣️","Paso 3: Escucha y repite",
+`<p>Haz clic en 🔊, escucha y repite en voz alta 3 veces. ¡Practica tu pronunciación!</p>`+
+vc([["I wish I had a car.","Ojalá tuviera un auto."],["I wish I were taller.","Ojalá fuera más alto/a."],["I wish she lived here.","Ojalá ella viviera aquí."],["I wish we didn't have homework.","Ojalá no tuviéramos tarea."],["I wish it weren't so cold.","Ojalá no hiciera tanto frío."],["I wish I could speak French.","Ojalá pudiera hablar francés."]]));
+
+h+=sec("#ff9f1a","🎧","Paso 4: Listening – Anna y Mike",
+`<p>Escucha la conversación entre dos amigos. Puedes escucharla las veces que quieras. Intenta primero <b>sin leer</b> la transcripción. Luego responde en <b>español o inglés</b>.</p>`+dlg(talk)+
+`<h3>Preguntas</h3>`+qs(["¿Qué desea Mike sobre los sábados?","¿Dónde le gustaría vivir a Mike?","¿Cómo desea ser Anna? (una característica)","¿Qué es lo único que Mike sabe preparar?","¿Qué van a hacer juntos al final?"]));
+
+h+=sec("#8a3ffc","📖","Paso 5: Reading – Los deseos de Sofia",
+`<p>Lee el texto y escúchalo con el botón.</p><div class="box">${btn(one(rd1),'Escuchar el texto')}<p>${rd1}</p></div>
+<h3>¿Verdadero o Falso?</h3>`+tf(["Sofia vive en una casa grande.","Sofia desea tener más tiempo para su familia.","Sofia quiere un perro.","Su hermano vive en Chicago.","Los fines de semana sueña con una casa cerca de las montañas."])+
+`<h3>Preguntas</h3>`+qs(["¿En qué ciudad vive Sofia?","¿Por qué desea un apartamento más grande?"]));
+
+h+=sec("#ff3d71","✏️","Paso 6: Completa las oraciones",
+`<p>Escribe el verbo del paréntesis en la forma correcta para completar la oración. ¡Haz clic en 🔊 para escucharla!</p>`+
+fill(["I wish I ___ (have) a bigger house.","She wishes she ___ (be) taller.","They wish they ___ (live) in Miami.","I wish it ___ (not / be) so hot today.","He wishes he ___ (know) how to dance.","We wish we ___ (not / have) so much homework."]));
+
+h+=sec("#3366ff","🎯","Paso 7: Elige la opción correcta",
+`<p>Selecciona la opción que completa bien cada oración.</p>`+
+pick([["I wish I ___ speak French.",["can","could","will"]],["I wish he ___ here with us.",["is","were","be"]],["She wishes she ___ a car.",["has","had","have"]],["I wish we ___ at work now.",["aren't","weren't","won't be"]],["They wish they ___ more money.",["have","had","having"]]]));
+
+h+=sec("#00b894","👂","Paso 8: Dictado",
+`<p>Escucha cada oración y escribe exactamente lo que escuchas, en inglés. ¡Puedes repetir el audio!</p>`+
+dic(["I wish I had a bigger kitchen.","She wishes she were on vacation.","We wish we didn't have to wake up early."]));
+
+h+=sec("#ff9f1a","🔄","Paso 9: Writing – Transforma la realidad en deseo",
+`<p>Convierte cada realidad en un deseo usando <b>I wish…</b> (o <b>He/She wishes…</b>). Escribe la oración completa.</p>`+
+wr(["I don't have a car.","I'm tired.","She doesn't live here.","We don't have time.","It's raining."],2));
+
+h+=sec("#8a3ffc","🌟","Paso 10: Writing libre – ¡Tus propios deseos!",
+`<p>Escribe <b>3 deseos reales sobre tu vida</b> usando <b>I wish + pasado simple</b>. Ejemplo: ${btn(one("I wish I lived near the sea."))}<i>I wish I lived near the sea.</i></p>
+<textarea rows="6" placeholder="1. I wish…&#10;2. I wish…&#10;3. I wish…"></textarea>
+<p>🎤 Después, léelos en voz alta. ¡Tu pronunciación mejora cuando hablas!</p>`);
+
+h+=`<div class="tarea"></div>`+sec("#e0245e","🏠","TAREA – Practica en casa",
+`<p>¡Casi terminamos! Todo lo que necesitas está aquí. Es corta y sencilla. ¡Tú puedes! 💪</p>`);
+
+h+=sec("#ff9f1a","🎧","Tarea 1: Listening – Los deseos de Tom",
+`<p>Escucha el audio todas las veces que necesites y responde.</p>`+dlg(tom)+
+qs(["¿Qué mascota desea tener Tom?","¿Qué instrumento desea tocar?","¿Qué desea Tom sobre su horario de trabajo?"]));
+
+h+=sec("#8a3ffc","📖","Tarea 2: Reading – Los deseos de Laura",
+`<div class="box">${btn(one(rd2),'Escuchar el texto')}<p>${rd2}</p></div><h3>¿Verdadero o Falso?</h3>`+
+tf(["Laura trabaja de día.","Laura desea que Boston no fuera tan frío en invierno.","Su hermana vive en Boston.","Laura desea tener más tiempo libre para pintar."])+
+`<h3>Pregunta</h3>`+qs(["¿Por qué desea Laura trabajar de día?"]));
+
+h+=sec("#ff3d71","✏️","Tarea 3: Completa las oraciones",
+fill(["I wish I ___ (be) on vacation.","She wishes she ___ (have) a bike.","They wish they ___ (not / work) today.","I wish my brother ___ (live) closer."].map(x=>x)));
+
+h+=sec("#3366ff","🔄","Tarea 4: Writing – Realidad a deseo",
+`<p>Convierte cada oración en un deseo con <b>I wish…</b> o <b>He/She wishes…</b></p>`+
+wr(["I don't have a phone.","He doesn't speak English well.","We don't have a garden."],2)+
+`<h3>Escribe tu deseo</h3><p>Escribe 2 oraciones sobre algo que te gustaría cambiar en tu vida (usa <b>I wish + pasado simple</b>).</p><textarea rows="4" placeholder="Escribe aquí…"></textarea>`);
+
+h+=`<div class="hero"><h1>🎉 Great job!</h1><p>${btn(one("Great job! See you in the next class!"),'Escuchar')}<br>¡Excelente trabajo! Nos vemos en la próxima clase.</p></div>`;
+
+document.getElementById('app').innerHTML=h;
+
+let voices=[];
+const load=()=>{voices=window.speechSynthesis?speechSynthesis.getVoices():[]};
+load();if(window.speechSynthesis)speechSynthesis.onvoiceschanged=load;
+function speak(lines){
+ speechSynthesis.cancel();
+ const v=voices.find(x=>x.lang==='en-US'&&/Google|Samantha|Zira|Aria|Jenny|Allison/.test(x.name))||voices.find(x=>x.lang==='en-US')||voices.find(x=>x.lang.startsWith('en'));
+ lines.forEach(([t,p])=>{const u=new SpeechSynthesisUtterance(t);u.lang='en-US';if(v)u.voice=v;u.rate=.9;u.pitch=p||1;speechSynthesis.speak(u)});
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.sp');if(!b)return;
+ if(!window.speechSynthesis){alert('Tu navegador no admite audio. Prueba con Chrome, Edge o Safari.');return}
+ speak(A[b.dataset.i]);
+});
+const ds=[...document.querySelectorAll('.done input')];
+ds.forEach(c=>c.addEventListener('change',()=>{
+ const p=Math.round(ds.filter(x=>x.checked).length/ds.length*100);
+ document.getElementById('fill').style.width=p+'%';
+ document.getElementById('pt').textContent='Tu progreso: '+p+'%'+(p===100?' 🎉 ¡Clase completada!':'');
+}));
+</script>
+</body></html>
